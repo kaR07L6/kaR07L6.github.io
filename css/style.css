@@ -18,8 +18,8 @@
   --green-accent:  #4caf50;
   --black:         #000000;
   --black-surface: rgba(0, 8, 0, 0.75);
-  font-family: "Hachi Maru Pop", cursive; /*フォント*/
-  --font-vt:       'VT323', monospace;
+  --font-mono: 'Share Tech Mono', monospace;
+  --font-vt: 'Hachi Maru Pop', cursive;
 }
 
 html { scroll-behavior: smooth; }
