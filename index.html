@@ -420,28 +420,30 @@
       if (!activated) { activated = true; startTransition(); }
     });
 
-    // 3秒後に自動でフェードアウト
-    setTimeout(() => {
-      if (!activated) { activated = true; startTransition(); }
-    }, 3000);
-
     function startTransition() {
       intro.style.transition = 'opacity 1s ease';
       intro.style.opacity = '0';
       setTimeout(() => {
         intro.style.display = 'none';
         loading.style.display = 'flex';
-        requestAnimationFrame(() => requestAnimationFrame(() => { loading.style.opacity = '1'; const lt = document.querySelector('.loading-text'); lt.textContent = ''; typeWriter(lt, 'あと、少し・・・待って', 90); }));
-        setTimeout(() => {
-          loading.style.transition = 'opacity 0.8s ease';
-          loading.style.opacity = '0';
-          setTimeout(() => {
-            loading.style.display = 'none';
-            main.style.display = 'block';
-            requestAnimationFrame(() => requestAnimationFrame(() => { main.style.opacity = '1'; }));
-            animateSkillBars();
-          }, 800);
-        }, 2800);
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          loading.style.opacity = '1';
+          const lt = document.querySelector('.loading-text');
+          const loadText = 'あと、少し・・・待って';
+          const loadSpeed = Math.floor(800 / loadText.length);
+          typeWriter(lt, loadText, loadSpeed, () => {
+            setTimeout(() => {
+              loading.style.transition = 'opacity 0.8s ease';
+              loading.style.opacity = '0';
+              setTimeout(() => {
+                loading.style.display = 'none';
+                main.style.display = 'block';
+                requestAnimationFrame(() => requestAnimationFrame(() => { main.style.opacity = '1'; }));
+                animateSkillBars();
+              }, 800);
+            }, 1200);
+          });
+        }));
       }, 1000);
     }
 
@@ -474,10 +476,16 @@
       }, speed);
     }
 
-    // ページ読み込み時にイントロのタイプライター開始
+    // ページ読み込み時: フェードイン(1s=1000ms)に合わせて文字を出し、出終わったら1秒待って自動遷移
     window.addEventListener('load', () => {
       const gt = document.querySelector('.glitch-text');
-      typeWriter(gt, '頑張っています・・', 80);
+      const introText = '頑張っています・・';
+      const speed = Math.floor(1000 / introText.length);
+      typeWriter(gt, introText, speed, () => {
+        setTimeout(() => {
+          if (!activated) { activated = true; startTransition(); }
+        }, 1000);
+      });
     });
 
     /* ランダムグリッチ */
