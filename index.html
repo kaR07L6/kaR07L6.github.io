@@ -228,6 +228,13 @@
 
     .cursor-blink { animation: blink 1s step-end infinite; }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    /* タイプライターカーソル */
+    .typed-cursor {
+      color: var(--green-accent);
+      animation: blink 0.6s step-end infinite;
+    }
+    .typed-done { color: inherit; }
   </style>
 </head>
 <body>
@@ -424,7 +431,7 @@
       setTimeout(() => {
         intro.style.display = 'none';
         loading.style.display = 'flex';
-        requestAnimationFrame(() => requestAnimationFrame(() => { loading.style.opacity = '1'; const lt = document.querySelector('.loading-text'); lt.textContent = ''; typeWriter(lt, '■あと、少し・・・待って', 90); }));
+        requestAnimationFrame(() => requestAnimationFrame(() => { loading.style.opacity = '1'; const lt = document.querySelector('.loading-text'); lt.textContent = ''; typeWriter(lt, 'あと、少し・・・待って', 90); }));
         setTimeout(() => {
           loading.style.transition = 'opacity 0.8s ease';
           loading.style.opacity = '0';
@@ -448,21 +455,29 @@
       });
     }
 
-    /* タイプライター */
+    /* タイプライター（◼︎カーソルが次の文字へ移動） */
     function typeWriter(el, text, speed, cb) {
-      el.textContent = '';
+      // ◼︎を除いた本文
+      const body = text.replace(/^■/, '');
+      el.innerHTML = '<span class="typed-done"></span><span class="typed-cursor">■</span>';
+      const done = el.querySelector('.typed-done');
+      const cursor = el.querySelector('.typed-cursor');
       let i = 0;
       const iv = setInterval(() => {
-        el.textContent += text[i];
+        done.textContent += body[i];
         i++;
-        if (i >= text.length) { clearInterval(iv); if (cb) cb(); }
+        if (i >= body.length) {
+          clearInterval(iv);
+          cursor.style.display = 'none';
+          if (cb) cb();
+        }
       }, speed);
     }
 
     // ページ読み込み時にイントロのタイプライター開始
     window.addEventListener('load', () => {
       const gt = document.querySelector('.glitch-text');
-      typeWriter(gt, '■頑張っています・・', 80);
+      typeWriter(gt, '頑張っています・・', 80);
     });
 
     /* ランダムグリッチ */
