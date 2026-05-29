@@ -93,7 +93,7 @@ body {
 }
 
 .glitch-text {
-  font-family: var(--font-vt);
+  font-family: "Hachi Maru Pop", cursive; /*フォント*/
   font-size: clamp(1.8rem, 5vw, 2.8rem);
   color: var(--green-bright);
   letter-spacing: 0.08em;
@@ -156,7 +156,7 @@ body {
 }
 
 .loading-text {
-  font-family: var(--font-vt);
+  font-family: "Hachi Maru Pop", cursive; /*フォント*/
   font-size: clamp(1.4rem, 4vw, 2rem);
   color: var(--green-mid);
   letter-spacing: 0.2em;
