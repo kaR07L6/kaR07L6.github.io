@@ -421,7 +421,7 @@
     });
 
     function startTransition() {
-      intro.style.transition = 'opacity 1s ease';
+      intro.style.transition = 'opacity 2s ease';
       intro.style.opacity = '0';
       setTimeout(() => {
         intro.style.display = 'none';
@@ -430,21 +430,21 @@
           loading.style.opacity = '1';
           const lt = document.querySelector('.loading-text');
           const loadText = 'あと、少し・・・待って';
-          const loadSpeed = Math.floor(800 / loadText.length);
+          const loadSpeed = Math.floor(3000 / loadText.length);
           typeWriter(lt, loadText, loadSpeed, () => {
             setTimeout(() => {
-              loading.style.transition = 'opacity 0.8s ease';
+              loading.style.transition = 'opacity 2s ease';
               loading.style.opacity = '0';
               setTimeout(() => {
                 loading.style.display = 'none';
                 main.style.display = 'block';
                 requestAnimationFrame(() => requestAnimationFrame(() => { main.style.opacity = '1'; }));
                 animateSkillBars();
-              }, 800);
-            }, 2500);
+              }, 2000);
+            }, 3000);
           });
         }));
-      }, 1000);
+      }, 2000);
     }
 
     /* スキルバー */
@@ -457,34 +457,41 @@
       });
     }
 
-    /* タイプライター（◼︎カーソルが次の文字へ移動） */
+    /* タイプライター（◼︎カーソルが次の文字へ移動・可変速度対応） */
     function typeWriter(el, text, speed, cb) {
-      // ◼︎を除いた本文
       const body = text.replace(/^■/, '');
       el.innerHTML = '<span class="typed-done"></span><span class="typed-cursor">■</span>';
       const done = el.querySelector('.typed-done');
       const cursor = el.querySelector('.typed-cursor');
       let i = 0;
-      const iv = setInterval(() => {
-        done.textContent += body[i];
-        i++;
+      function typeNext() {
         if (i >= body.length) {
-          clearInterval(iv);
           cursor.style.display = 'none';
           if (cb) cb();
+          return;
         }
-      }, speed);
+        done.textContent += body[i];
+        i++;
+        const delay = typeof speed === 'function' ? speed(i, body.length) : speed;
+        setTimeout(typeNext, delay);
+      }
+      typeNext();
     }
 
-    // ページ読み込み時: フェードイン(1s=1000ms)に合わせて文字を出し、出終わったら1秒待って自動遷移
+    // 速度: 最初は速め→だんだん遅くなる（6秒で出し切る）
+    function introSpeed(i, total) {
+      const base = 6000 / total;
+      const slow = base * (1 + (i / total) * 3); // 後半は最大4倍遅く
+      return Math.floor(slow);
+    }
+
+    // ページ読み込み時
     window.addEventListener('load', () => {
       const gt = document.querySelector('.glitch-text');
-      const introText = '頑張っています・・';
-      const speed = Math.floor(1000 / introText.length);
-      typeWriter(gt, introText, speed, () => {
+      typeWriter(gt, '頑張っています・・', introSpeed, () => {
         setTimeout(() => {
           if (!activated) { activated = true; startTransition(); }
-        }, 2000);
+        }, 3000);
       });
     });
 
