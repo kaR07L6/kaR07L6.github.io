@@ -87,6 +87,25 @@
     .key-y { color: var(--green-bright); font-size: 1.2em; letter-spacing: 0.3em; }
     .input-hint { font-size: 0.65rem; color: var(--green-deep); letter-spacing: 0.25em; margin-top: -1.5rem; }
 
+    /* 縮まる線 */
+    .shrink-line-wrap {
+      width: 300px; max-width: 80vw;
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    }
+    .shrink-line {
+      height: 1px; background: var(--green-border);
+      animation: shrink-loop 3s ease-in-out infinite;
+      transform-origin: center;
+    }
+    .shrink-line:nth-child(1) { width: 100%; animation-delay: 0s; }
+    .shrink-line:nth-child(2) { width: 100%; animation-delay: 0.3s; }
+    .shrink-line:nth-child(3) { width: 100%; animation-delay: 0.6s; }
+    @keyframes shrink-loop {
+      0%   { transform: scaleX(1);   opacity: 0.8; background: var(--green-border); }
+      50%  { transform: scaleX(0);   opacity: 0.2; background: var(--green-accent); }
+      100% { transform: scaleX(1);   opacity: 0.8; background: var(--green-border); }
+    }
+
     /* SCREEN 2: ローディング */
     #screen-loading {
       display: none; flex-direction: column; align-items: center;
@@ -219,10 +238,16 @@
 
   <!-- SCREEN 1: イントロ -->
   <div id="screen-intro">
-    <div class="glitch-text">見つけてくれてありがとう。</div>
-    <div class="float-prompt">
-      ▼ サイトを閲覧するには<br>
-      <span class="key-y">y</span> を入力してください。<span class="cursor-blink">_</span>
+    <div class="shrink-line-wrap">
+      <div class="shrink-line"></div>
+      <div class="shrink-line"></div>
+      <div class="shrink-line"></div>
+    </div>
+    <div class="glitch-text">頑張っています・・</div>
+    <div class="shrink-line-wrap">
+      <div class="shrink-line"></div>
+      <div class="shrink-line"></div>
+      <div class="shrink-line"></div>
     </div>
     <div class="input-hint">[ PRESS Y TO CONNECT TO THE WIRED ]</div>
   </div>
